@@ -1,3 +1,4 @@
+import libAxios from './axios'
 import http from './axios'
 
 export type ProjectStatus = 'draft' | 'in_progress' | 'on_hold' | 'completed' | 'cancelled'
@@ -51,12 +52,14 @@ export interface AuthUser {
 const unwrap = <T>(res: { data: { data: T } }): T => res.data.data
 
 export const api = {
-    tracking: {
-        get: (code: string) =>
-            http.get<{ data: ProjectTracking }>(`/track/${code.toUpperCase()}`).then(unwrap<ProjectTracking>),
+    // Cool
+    tracking: async (code: string) => {
+        const res = await libAxios.get(`/api/track/${code}`);
+        return res.data;
     },
-    services: {
-        list: () => http.get<{ data: Service[] }>('/services').then(unwrap<Service[]>),
+    services: async () => {
+        const res = await libAxios.get('/api/services');
+        return res.data;
     },
     portfolio: {
         list: () => http.get<{ data: PortfolioProject[] }>('/portfolio').then(unwrap<PortfolioProject[]>),
